@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Staff members timesheet</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-gray-100">
+  <div class="container mx-auto p-4">
+    <h1 class="text-3xl font-bold mb-4">Staff members timesheet</h1>
+    <table class="min-w-full bg-white border border-gray-300 rounded-lg shadow-md">
+      <thead>
+        <tr class="bg-gray-200 text-gray-700">
+          <th class="border border-gray-300 px-4 py-2">Staff Members</th>
+          {% for proj_id in reef_projects %}
+          <th class="border border-gray-300 px-4 py-2">{{ proj_id['name'] }}</th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for staff_member in staff_for_projects.values()|first %}
+        <tr class="hover:bg-gray-100">
+          <td class="border border-gray-300 px-4 py-2">{{ users[staff_member.user_id].name }}</td>
+          {% for proj_id, staff_members in staff_for_projects.items() %}
+            {% set hours_worked = 0 %}
+
+            {% for time_sheet in time_sheets %}
+              {% if time_sheet.user_id == staff_member.id and time_sheet.project_id == proj_id %}
+                {% set hours_worked = time_sheet.hours %}  
+              {% endif %}
+            {% endfor %}
+            <td class="border border-gray-300 px-4 py-2">
+              {{ hours_worked if hours_worked > 0 else 0 }}
+            </td>
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</body>
+
+</html>
